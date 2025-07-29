@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puisititik - Temukan Keindahan Kata</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+        
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            padding-bottom: 70px;
+            line-height: 1.6;
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: #ffffff;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        
+        .search-container {
+            display: flex;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 14px;
+        }
+        
+        .search-container button {
+            padding: 8px 15px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 60vh;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .hero-overlay {
+            background: rgba(0, 0, 0, 0.4);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-content {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            z-index: 2;
+            max-width: 800px;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+        
+        /* Featured Poems */
+        .featured-section {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #000;
+            position: relative;
+        }
+        
+        .poem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .poem-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .poem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .poem-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            background-color: #f5f5f5;
+        }
+        
+        .poem-content {
+            padding: 20px;
+        }
+        
+        .poem-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .poem-excerpt {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        
+        .poem-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #eee;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #000;
+            cursor: pointer;
+        }
+        
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+        
+        /* Navigation Drawer */
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            height: 100%;
+            background: #fff;
+            z-index: 1001;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+        
+        .drawer.open {
+            left: 0;
+        }
+        
+        .drawer-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        
+        .drawer-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .drawer-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .drawer-section {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .drawer-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .category-list, .pages-list {
+            list-style: none;
+        }
+        
+        .category-list li, .pages-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .category-list li:last-child, .pages-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .category-list a, .pages-list a {
+            text-decoration: none;
+            color: #000;
+            display: block;
+            transition: color 0.2s;
+        }
+        
+        .category-list a:hover, .pages-list a:hover {
+            color: #555;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #f9f9f9;
+            padding: 40px 0;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #000;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-links a:hover {
+            color: #555;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-container {
+                max-width: 100%;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">PUISITITIK</div>
+            <div class="search-container">
+                <input type="text" placeholder="Cari puisi, penulis, atau tema...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <div class="hero" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%221000%22 height=%22600%22 viewBox=%220 0 1000 600%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Arial%22 font-size=%2272%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%23000%22>PUISI SAJA, TITIK</text></svg>');">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h1 class="hero-title">Keindahan Kata Dalam Setiap Titik</h1>
+                <p class="hero-subtitle">Temukan puisi-puisi indah dari penulis lokal dan internasional yang menyentuh hati dan memicu imajinasi</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Featured Poems -->
+    <section class="featured-section">
+        <h2 class="section-title">Puisi Pilihan</h2>
+        <div class="poem-grid">
+            <!-- Poem 1 -->
+            <div class="poem-card">
+                <div class="poem-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22 viewBox=%220 0 280 200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f5f5f5%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Arial%22 font-size=%2218%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%23333%22>Pemandangan Senja</text></svg>');"></div>
+                <div class="poem-content">
+                    <h3 class="poem-title">Senyap Senja</h3>
+                    <p class="poem-excerpt">Matahari perlahan memejam, meninggalkan jejak jingga di ufuk barat. Aku terduduk, menatap langit yang berubah pakaiannya...</p>
+                    <div class="poem-meta">
+                        <span>Oleh: Ananda Putri</span>
+                        <span>3 menit baca</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Poem 2 -->
+            <div class="poem-card">
+                <div class="poem-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22 viewBox=%220 0 280 200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f5f5f5%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Arial%22 font-size=%2218%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%23333%22>Hujan Bulan Juni</text></svg>');"></div>
+                <div class="poem-content">
+                    <h3 class="poem-title">Rintik Hujan</h3>
+                    <p class="poem-excerpt">Hujan di bulan Juni membasahi bumi, membawa rindu yang lama terpendam. Setiap tetesnya adalah cerita yang tak terucap...</p>
+                    <div class="poem-meta">
+                        <span>Oleh: Rama Satria</span>
+                        <span>2 menit baca</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Poem 3 -->
+            <div class="poem-card">
+                <div class="poem-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22 viewBox=%220 0 280 200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f5f5f5%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Arial%22 font-size=%2218%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%23333%22>Lautan Kata</text></svg>');"></div>
+                <div class="poem-content">
+                    <h3 class="poem-title">Ombak Kata</h3>
+                    <p class="poem-excerpt">Di samudra luas imajinasi, kata-kata berombak saling menyapa. Ada yang berdesir pelan, ada yang menggulung tinggi...</p>
+                    <div class="poem-meta">
+                        <span>Oleh: Dian Sastrowardoyo</span>
+                        <span>4 menit baca</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Categories Section -->
+    <section class="featured-section">
+        <h2 class="section-title">Kategori Puisi</h2>
+        <div class="poem-grid">
+            <!-- Category 1 -->
+            <div class="poem-card">
+                <div class="poem-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22 viewBox=%220 0 280 200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Arial%22 font-size=%2220%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%23000%22>Cinta & Rindu</text></svg>');"></div>
+                <div class="poem-content">
+                    <h3 class="poem-title">Cinta & Rindu</h3>
+                    <p class="poem-excerpt">Puisi tentang kisah cinta, kerinduan, dan perasaan hati yang terdalam</p>
+                </div>
+            </div>
+            
+            <!-- Category 2 -->
+            <div class="poem-card">
+                <div class="poem-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22 viewBox=%220 0 280 200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Arial%22 font-size=%2220%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%23000%22>Alam & Keindahan</text></svg>');"></div>
+                <div class="poem-content">
+                    <h3 class="poem-title">Alam & Keindahan</h3>
+                    <p class="poem-excerpt">Keagungan alam dan keindahan semesta dalam rangkaian kata puitis</p>
+                </div>
+            </div>
+            
+            <!-- Category 3 -->
+            <div class="poem-card">
+                <div class="poem-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22200%22 viewBox=%220 0 280 200%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Arial%22 font-size=%2220%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22%23000%22>Renungan Hidup</text></svg>');"></div>
+                <div class="poem-content">
+                    <h3 class="poem-title">Renungan Hidup</h3>
+                    <p class="poem-excerpt">Puisi yang menyentuh hati dan memicu perenungan tentang makna kehidupan</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Tentang Puisititik</h3>
+                <p>Puisititik adalah platform untuk menemukan, membaca, dan berbagi puisi-puisi indah dari berbagai penulis dan tema.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Kategori Populer</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Cinta & Rindu</a></li>
+                    <li><a href="#">Alam & Keindahan</a></li>
+                    <li><a href="#">Renungan Hidup</a></li>
+                    <li><a href="#">Puisi Anak</a></li>
+                    <li><a href="#">Puisi Pahlawan</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Tautan Penting</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Kirim Puisi</a></li>
+                    <li><a href="#">Komunitas Penulis</a></li>
+                    <li><a href="#">Lomba Puisi</a></li>
+                    <li><a href="#">Buku Puisi</a></li>
+                    <li><a href="#">Kontak Kami</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2023 Puisititik. Semua Hak Dilindungi.
+        </div>
+    </footer>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Beranda</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-search"></i>
+            <span>Cari</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-share-alt"></i>
+            <span>Bagikan</span>
+        </div>
+        <div class="nav-item" id="menuBtn">
+            <i class="fas fa-bars"></i>
+            <span>Menu</span>
+        </div>
+    </nav>
+    
+    <!-- Navigation Drawer -->
+    <div class="overlay" id="overlay"></div>
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <button class="drawer-close" id="closeDrawer">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="drawer-logo">PUISITITIK</div>
+        </div>
+        
+        <div class="drawer-section">
+            <h3 class="drawer-title">Kategori Puisi</h3>
+            <ul class="category-list">
+                <li><a href="#">Cinta & Rindu</a></li>
+                <li><a href="#">Alam & Keindahan</a></li>
+                <li><a href="#">Renungan Hidup</a></li>
+                <li><a href="#">Puisi Anak</a></li>
+                <li><a href="#">Puisi Pahlawan</a></li>
+                <li><a href="#">Puisi Religi</a></li>
+                <li><a href="#">Puisi Perjuangan</a></li>
+                <li><a href="#">Puisi Persahabatan</a></li>
+                <li><a href="#">Puisi Kemerdekaan</a></li>
+                <li><a href="#">Puisi Satire</a></li>
+            </ul>
+        </div>
+        
+        <div class="drawer-section">
+            <h3 class="drawer-title">Laman</h3>
+            <ul class="pages-list">
+                <li><a href="#">Tentang Kami</a></li>
+                <li><a href="#">Kontak</a></li>
+                <li><a href="#">Beranda</a></li>
+                <li><a href="#">Saran & Kritik</a></li>
+                <li><a href="#">Kirim Puisi</a></li>
+                <li><a href="#">Kebijakan Privasi</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Drawer Navigation Functionality
+        const menuBtn = document.getElementById('menuBtn');
+        const closeDrawer = document.getElementById('closeDrawer');
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('overlay');
+        
+        menuBtn.addEventListener('click', () => {
+            drawer.classList.add('open');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeDrawer.addEventListener('click', () => {
+            drawer.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        overlay.addEventListener('click', () => {
+            drawer.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        // Simulate hero image from the provided file
+        const hero = document.querySelector('.hero');
+        hero.style.backgroundImage = "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1000\" height=\"600\" viewBox=\"0 0 1000 600\"><rect width=\"100%\" height=\"100%\" fill=\"%23f0f0f0\"/><text x=\"50%\" y=\"50%\" font-family=\"Arial\" font-size=\"72\" text-anchor=\"middle\" dominant-baseline=\"middle\" fill=\"%23000\">PUISI SAJA, TITIK</text></svg>')";
+    </script>
+</body>
+</html>
